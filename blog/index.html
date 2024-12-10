@@ -1,0 +1,663 @@
+<html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<link rel="shortcut icon" href="images/icon.ico">
+<style type="text/css">
+	body {
+		background-color: #f5f9ff;
+	}
+
+	/* Hide both math displays initially, will display based on JS detection */
+  .mathjax-mobile, .mathml-non-mobile { display: none; }
+
+  /* Show the MathML content by default on non-mobile devices */
+  .show-mathml .mathml-non-mobile { display: block; }
+  .show-mathjax .mathjax-mobile { display: block; }
+
+	.content-margin-container {
+		display: flex;
+		width: 100%; /* Ensure the container is full width */
+		justify-content: left; /* Horizontally centers the children in the container */
+		align-items: center;  /* Vertically centers the children in the container */
+	}
+	.main-content-block {
+		width: 70%; /* Change this percentage as needed */
+    max-width: 1100px; /* Optional: Maximum width */
+		background-color: #fff;
+		border-left: 1px solid #DDD;
+		border-right: 1px solid #DDD;
+		padding: 8px 8px 8px 8px;
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+	}
+	.margin-left-block {
+			font-size: 14px;
+			width: 15%; /* Change this percentage as needed */
+			max-width: 130px; /* Optional: Maximum width */
+			position: relative;
+			margin-left: 10px;
+			text-align: left;
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+			padding: 5px;
+	}
+	.margin-right-block {
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+			font-size: 14px;
+			width: 25%; /* Change this percentage as needed */
+			max-width: 256px; /* Optional: Maximum width */
+			position: relative;
+			text-align: left;
+			padding: 10px;  /* Optional: Adds padding inside the caption */
+	}
+
+	img {
+			max-width: 100%; /* Make sure it fits inside the container */
+			height: auto;
+			display: block;
+			margin: auto;
+	}
+	.my-video {
+			max-width: 100%; /* Make sure it fits inside the container */
+			height: auto;
+			display: block;
+			margin: auto;
+	}
+	/* Hide both video displays initially, will display based on JS detection */
+  .vid-mobile, .vid-non-mobile { display: none; }
+
+  /* Show the video content by default on non-mobile devices */
+  .show-vid-mobile .vid-mobile { display: block; }
+  .show-vid-non-mobile .vid-non-mobile { display: block; }
+
+	a:link,a:visited
+	{
+		color: #0e7862; /*#1367a7;*/
+		text-decoration: none;
+	}
+	a:hover {
+		color: #24b597; /*#208799;*/
+	}
+
+	h1 {
+		font-size: 18px;
+		margin-top: 4px;
+		margin-bottom: 10px;
+	}
+
+	table.header {
+    font-weight: 300;
+    font-size: 17px;
+    flex-grow: 1;
+		width: 70%;
+    max-width: calc(100% - 290px); /* Adjust according to the width of .paper-code-tab */
+	}
+	table td, table td * {
+	    vertical-align: middle;
+	    position: relative;
+	}
+	table.paper-code-tab {
+	    flex-shrink: 0;
+	    margin-left: 8px;
+	    margin-top: 8px;
+	    padding: 0px 0px 0px 8px;
+	    width: 290px;
+	    height: 150px;
+	}
+
+	.layered-paper { /* modified from: http://css-tricks.com/snippets/css/layered-paper/ */
+		box-shadow:
+		        0px 0px 1px 1px rgba(0,0,0,0.35), /* The top layer shadow */
+		        5px 5px 0 0px #fff, /* The second layer */
+		        5px 5px 1px 1px rgba(0,0,0,0.35), /* The second layer shadow */
+		        10px 10px 0 0px #fff, /* The third layer */
+		        10px 10px 1px 1px rgba(0,0,0,0.35); /* The third layer shadow */
+		margin-top: 5px;
+		margin-left: 10px;
+		margin-right: 30px;
+		margin-bottom: 5px;
+	}
+
+	hr {
+    height: 1px; /* Sets the height of the line to 1 pixel */
+    border: none; /* Removes the default border */
+    background-color: #DDD; /* Sets the line color to black */
+  }
+
+	div.hypothesis {
+		width: 80%;
+		background-color: #EEE;
+		border: 1px solid black;
+		border-radius: 10px;
+		-moz-border-radius: 10px;
+		-webkit-border-radius: 10px;
+		font-family: Courier;
+		font-size: 18px;
+		text-align: center;
+		margin: auto;
+		padding: 16px 16px 16px 16px;
+	}
+
+	div.citation {
+    font-size: 0.8em;
+    background-color:#fff;
+    padding: 10px;
+		height: 200px;
+  }
+
+	.fade-in-inline {
+		position: absolute;
+		text-align: center;
+		margin: auto;
+		-webkit-mask-image: linear-gradient(to right,
+																			transparent 0%,
+																			transparent 40%,
+																			black 50%,
+																			black 90%,
+																			transparent 100%);
+		mask-image: linear-gradient(to right,
+																transparent 0%,
+																transparent 40%,
+																black 50%,
+																black 90%,
+																transparent 100%);
+		-webkit-mask-size: 8000% 100%;
+		mask-size: 8000% 100%;
+		animation-name: sweepMask;
+		animation-duration: 4s;
+		animation-iteration-count: infinite;
+		animation-timing-function: linear;
+		animation-delay: -1s;
+	}
+
+	.fade-in2-inline {
+			animation-delay: 1s;
+	}
+
+	.inline-div {
+			position: relative;
+	    display: inline-block; /* Makes both the div and paragraph inline-block elements */
+	    vertical-align: top; /* Aligns them at the top, you can adjust this to middle, bottom, etc., based on your needs */
+	    width: 50px; /* Optional: Adds space between the div and the paragraph */
+	}
+
+</style>
+
+	  <title>Self-supervised Time-series Anomaly Detection for ECG</title>
+      <meta property="og:title" content="Self-supervised Time-series Anomaly Detection for ECG" />
+			<meta charset="UTF-8">
+  </head>
+
+  <body>
+
+		<div class="content-margin-container">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<table class="header" align=left>
+								<tr>
+									<td colspan=4>
+										<span style="font-size: 32px; font-family: 'Courier New', Courier, monospace; /* Adds fallbacks */">A Lightweight Transformer-Based Framework for Self-Supervised Electrocardiogram Anomaly Detection with Domain-Specific Augmentations</span>
+									</td>
+								</tr>
+								<tr>
+										<td align=left>
+												<span style="font-size:17px"><a href="https://james-bole-pan.github.io/">James Bole Pan</a></span>
+										</td>
+								<tr>
+									<td colspan=4 align=left><span style="font-size:18px">Final project for 6.7960, MIT</span></td>
+								</tr>
+						</table>
+					</div>
+					<div class="margin-right-block">
+					</div>
+		</div>
+
+		<div class="content-margin-container" id="intro">
+				<div class="margin-left-block">
+          <!-- table of contents here -->
+		  <div style="position:fixed; max-width:inherit; top:max(10%,20px); max-height:80vh; overflow-y:auto; border:1px solid #ccc; padding:0px; background-color:#f9f9f9;">
+			<b style="font-size:16px">Outline</b><br><br>
+              <a href="#intro">1. Introduction </a><br><br>
+              <a href="#relatedwork">2. Background and Related Work</a><br><br>
+			  <a href="#2.1">2.1 Time-series Anomaly Detection</a><br><br>
+			  <a href="#2.2">2.2 Self-supervised Learning for Time-series Anomaly Detection</a><br><br>
+			  <a href="#2.3">2.3 Anomaly Detection in ECG Signals</a><br><br>
+			  <a href="#2.4">2.4 Gaps in Current Research and Motivation for This Study</a><br><br>
+              <a href="#methods">3. Methods</a><br><br>
+			  <a href="#3.1">3.1 Datasets </a><br><br>
+			  <a href="#3.2">3.2 Architecture </a><br><br>
+			  <a href="#results">4. Experiments and Results</a><br><br>
+			  <a href="#4.1">4.1 Validation of the Model's Performance on Synthetic Data </a><br><br>
+			  <a href="#4.2">4.2 Testing the Model on Real ECG Data </a><br><br>
+			  <a href="#4.3">4.3 Testing Model's Performance on Anomalies that Alter ECG Spectral Features </a><br><br>
+			  <a href="#4.4">4.4 Testing Different Training Parameters on Model Performance </a><br><br>
+			  <a href="#4.4.1">4.4.1 Learning Rate Analysis </a><br><br>
+			  <a href="#4.4.2">4.4.2 Optimizer Analysis </a><br><br>
+			  <a href="#4.4.3">4.4.3 Batch Size Analysis </a><br><br>
+			  <a href="#discussion">5. Discussions</a><br><br>
+			  <a href="#citations">References</a><br><br>
+          </div>
+				</div>
+		    <div class="main-content-block" id="figure1">
+            <!--You can embed an image like this:-->
+            <img src="./images/Figure1.png" width=700px/>
+		    </div>
+		    <div class="margin-right-block">
+				Figure 1. Model architecture. A transformer-based lightweight architecture for ECG anomaly detection using domain-specific anomaly injection
+		    </div>
+		</div>
+
+    <div class="content-margin-container" id="intro">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<h1>1. Introduction and Motivation</h1>
+						Time-series data anomaly detection is a critical task with applications across diverse disciplines, including healthcare, finance, and industrial monitoring <a href="#ref_1">[1]</a>. The rapid growth in the volume of data in these fields creates immense opportunities for insights, but it also presents challenges. A significant portion of this data is unlabeled, which limits the applicability of traditional anomaly detection methods that rely on supervised learning approaches <a href="#ref_2">[2]</a>. In this context, self-supervised learning, which uses the data itself to generate supervisory signals, has emerged as a promising approach for tackling the challenges associated with time-series anomaly detection <a href="#ref_3">[3]</a>. In the healthcare industry, particularly within the domain of electrocardiogram (ECG) signal processing, there is a substantial need for innovative approaches like self-supervised learning <a href="#ref_4">[4]</a>. 
+						<br><br>
+						Heart diseases is the number one cause of death worldwide, and ECG signals are crucial in monitoring cardiac health, detecting arrhythmias, and identifying other cardiac abnormalities <a href="#ref_5">[5]</a><a href="#ref_6">[6]</a>. However, the manual labeling of ECG data is time-intensive and requires significant domain expertise. Moreover, the wide variability in ECG patterns further complicates traditional methods of analysis. Self-supervised learning offers a solution by enabling models to learn meaningful representations from unlabeled data, making it particularly well-suited for anomaly detection in time-series data such as ECG signals <a href="#ref_7">[7]</a>.
+						<br><br>
+						Despite the growing interest in the field of self-supervised learning for ECG data, no prior study has specifically leveraged this approach in conjunction with domain-specific ECG anomalies. To address this gap, we propose a lightweight, robust, and interpretable transformer-based architecture that integrates domain-specific anomaly injection for self-supervised learning. Our anomaly injection framework simulates clinically relevant pathologies, ensuring the injected anomalies closely reflect real-world ECG abnormalities. Through systematic experimentation, we demonstrate the model's ability to effectively detect these anomalies, achieving high performance even with subtle and challenging cases. Additionally, we delve into the underlying factors contributing to the model's success by characterizing the effects of key hyperparameters, including learning rate, optimizer, and batch size, on training dynamics and overall performance. Through this analysis, we hope to provide insights into the architecture's robustness and its potential for real-world deployment.
+						
+		    </div>
+		</div>
+
+		<div class="content-margin-container" id="relatedwork">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+					<h1>2. Background and Related Work</h1>
+		    </div>
+		</div>
+
+		<div class="content-margin-container" id="2.1">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+					<h1>2.1 Time-series Anomaly Detection</h1>
+					Time-series anomaly detection involves identifying patterns in temporal data that deviate significantly from expected behavior <a href="#ref_1">[1]</a>. Early approaches primarily relied on statistical methods, which can be broadly categorized into parametric and non-parametric models <a href="#ref_8">[8]</a>. Parametric models assume a predefined data distribution and estimate model parameters using techniques such as Maximum Likelihood Estimation (MLE). Common parametric distributions include Gaussian and multinomial distributions. However, real-world datasets often exhibit irregular and complex patterns that deviate from these assumptions, limiting the effectiveness of parametric approaches <a href="#ref_1">[9]</a> <a href="#ref_1">[10]</a>. Conversely, non-parametric models do not rely on specific distribution assumptions, instead using techniques such as distance-based similarity or density estimation to identify anomalies <a href="#ref_1">[11]</a> <a href="#ref_1">[12]</a>. While non-parametric methods offer flexibility for handling complex data distributions, they often struggle with high-dimensional time-series data, where defining effective similarity or distance metrics becomes increasingly challenging.
+					<br><br>
+					Recent advancements in machine learning have popularized both supervised and unsupervised approaches for time-series anomaly detection. Supervised methods, such as Long Short-Term Memory (LSTM) networks and autoencoders, effectively capture temporal dependencies and nonlinear patterns in time-series data <a href="#ref_13">[13]</a> <a href="#ref_14">[14]</a> <a href="#ref_15">[15]</a>. However, their reliance on labeled datasets and the issue of class imbalance poses challenges, as normal data are often far more prevalent than anomalous data. On the other hand, unsupervised approaches do not require labeled data. For instance, clustering-based anomaly detection assumes that anomalies form small, tightly clustered groups. While such methods are straightforward to implement and require minimal modeling effort, the assumption that anomalies cluster together may not hold true for all datasets, reducing their generalizability <a href="#ref_16">[16]</a>.
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="2.2">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+            	<h1>2.2 Self-supervised Learning for Time-series Anomaly Detection</h1>
+            	Self-supervised learning (SSL), a branch of unsupervised learning, has recently achieved state-of-the-art performance in time-series analysis tasks <a href="#ref_17">[17]</a> <a href="#ref_18">[18]</a>. This success has sparked growing interest in applying SSL to time-series anomaly detection.
+				<br><br>
+				SSL capitalizes on unlabeled data by generating pseudo-labels, enabling models to learn meaningful representations with minimal human supervision. A key feature of SSL is the use of pretext tasks—self-defined objectives like temporal ordering, reconstruction, interpolation, or forecasting—that allow models to uncover intrinsic patterns in data without requiring explicit labels. For anomaly detection, pretext tasks often involve distinguishing normal from abnormal patterns or identifying the type of injected anomalies. For example, Tran et al. <a href="#ref_19">[19]</a> proposed a 1D Convolutional Neural Network (1DCNN)-based SSL framework that classifies data augmentations, such as rotation and jittering. This method demonstrated strong performance in handling noisy and multivariate time-series data. Similarly, AnomalyBERT <a href="#ref_20">[20]</a>, a transformer-based model, trains on synthetic outliers of four types and learns to predict them, achieving robust anomaly detection.
+				<br><br>
+				Contrastive learning, a specialized SSL approach, has garnered particular attention for its ability to learn robust representations. This method involves maximizing the similarity between augmented versions of the same signal while minimizing similarity with anomalous samples. Contrastive learning has shown significant promise in time-series anomaly detection. For instance, Jiao et al. <a href="#ref_21">[21]</a> introduced TimeAutoAD, which employs a self-supervised contrastive loss to detect subtle deviations in complex datasets. Similarly, Darban et al. <a href="#ref_22">[22]</a> developed CARLA, a framework leveraging contrastive learning for anomaly detection in time-series data, and Sun et al. <a href="#ref_23">[23]</a> proposed TriAD, which compares time-series data across temporal, frequency, and residual domains using a contrastive loss, further showcasing the versatility of these methods.
+				<br><br>
+				Across both contrastive and non-contrastive SSL methods, a common strategy in time-series anomaly detection involves transforming input data via augmentations to create pseudo-anomalies and designing training processes around these transformations <a href="#ref_24">[24]</a>. Consequently, model performance is highly sensitive to the choice of augmentations. Injecting augmentations that closely resemble real-world anomalies is critical for achieving high detection accuracy, emphasizing the importance of tailoring augmentations to the target application domain.
+		    </div>
+		</div>
+
+		<div class="content-margin-container" id="2.3">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<h1>2.3 Anomaly Detection in ECG Signals</h1>
+						Electrocardiogram (ECG), a composite recording of the electrical activity generated by the nodes and myocardial cells of the heart, is a vital tool for diagnosing heart diseases. Common anomalies detected using ECG include Atrial Premature Contraction (APC), Atrial Fibrillation (AF), Paced Beat (PB), Premature Ventricular Contraction (PVC), Right Bundle Branch Block (RBBB), Ventricular Bigeminy (VB), Ventricular Couplets (VCs), and Ventricular Tachycardia (VT) <a href="#ref_25">[25]</a> <a href="#ref_26">[26]</a>.
+						<br><br>
+						Detecting anomalies in ECG signals presents unique challenges due to the wide variety of possible abnormalities, the limited availability of expert-labeled datasets, and the rarity of certain anomalies with few representative samples <a href="#ref_27">[27]</a>. Recent research efforts have focused on developing advanced anomaly detection algorithms, with self-supervised learning (SSL) emerging as a promising approach in this domain. For example, Kiyasseh et al. <a href="#ref_28">[28]</a> applied contrastive learning to ECG signals by treating multiple channels from the same time window of a patient as positive pairs, enabling the learning of patient-specific representations. Hribar and Torkar <a href="#ref_26">[26]</a> proposed a denoising autoencoder for explainable anomaly detection by comparing the reconstructed signal with the ground truth. Similarly, Park et al. <a href="#ref_29">[29]</a> introduced EB-GAME, a GAN-based model that leverages self-masked ECG signal segments for anomaly prediction.
+					</div>
+		    <div class="margin-right-block">
+		    </div>
+		</div>
+
+		<div class="content-margin-container" id="2.4">
+			<div class="margin-left-block">
+			</div>
+				<div class="main-content-block">
+							<h1>2.4 Gaps in Current Research and Motivation for This Study</h1>
+							Despite substantial advancements in self-supervised learning (SSL) for time-series anomaly detection in ECG data, existing methods still struggle to accurately identify cardiac anomalies, particularly rare cases, that have the potential to progress into life-threatening conditions <a href="#ref_7">[7]</a>.
+							<br><br>
+							Several critical gaps persist in this field: First, many current approaches are trained exclusively on normal ECG data or treat various anomalies as a single, undifferentiated category of "abnormal signals." This oversimplification undermines the nuanced understanding needed for precise anomaly detection. There has been little systematic effort to evaluate model performance on different injected anomalies that closely simulate pathological cases in real ECG data. A comprehensive characterization of model effectiveness across the spectrum of real-world anomalies is essential for identifying architectures with broad applicability and generalizability. Second, the high computational complexity of existing SSL frameworks limits their feasibility in resource-constrained environments. This is particularly problematic for deployment in wearable devices or healthcare settings in low-income regions, where accessibility and efficiency are paramount.
+							<br><br>
+							This research project aims to bridge these gaps by developing a customized SSL framework optimized for ECG anomaly detection. Through the integration of domain-specific data augmentations and lightweight model architectures, the study seeks to improve detection accuracy, robustness across diverse anomaly types, and scalability. By addressing these challenges, the project explores the practical application of SSL in real-world clinical settings, with the goal of advancing the early detection and treatment of cardiac conditions.
+					</div>
+				<div class="margin-right-block">
+				</div>
+			</div>
+
+			<div class="content-margin-container" id="methods">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+					<h1>3. Methods</h1>
+		    </div>
+		</div>
+
+		<div class="content-margin-container" id="3.1">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+					<h1>3.1	Datasets </h1>
+					Our study evaluates model performance on both synthetic and real-world ECG datasets. For the real-world dataset, we utilize the MIT-BIH Arrhythmia Database <a href="#ref_30">[30]</a> <a href="#ref_31">[31]</a>. This dataset comprises 48 recordings, each 30 minutes long, from 47 individuals who participated in a study conducted at Boston's Beth Israel Hospital (now the Beth Israel Deaconess Medical Center) and MIT between 1975 and 1979. The recordings, sampled at 360 Hz across two channels, primarily include normal heartbeats. Anomalies are categorized into five types: atrial premature beats (APB), left bundle branch block (LBBB), normal sinus rhythm (NSR), right bundle branch block (RBBB), and ventricular premature beats (PVC).
+					<br><br>
+					In addition to the real-world dataset, synthetic data is generated by injecting domain-specific anomalies into clean ECG signals. This enables controlled experimentation on model behavior with precisely defined anomaly characteristics.
+				</div>
+		</div>
+
+		<div class="content-margin-container" id="3.2">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+            	<h1>3.2	Architecture</h1>
+            	The proposed model architecture is designed to effectively classify ECG signals while emphasizing scalability by being lightweight. 
+				<br><br>
+				The pipeline begins with preprocessing the raw ECG data. Input signals, whether from real-world datasets or synthetic sources, are first cleaned and prepared for analysis. Domain-specific anomalies are systematically injected into segments of the data in a randomized fashion, simulating realistic pathological scenarios. The preprocessed signals are then tokenized into fixed-length windows, where each token represents a segment of the signal. The corresponding label of each token denoting the anomaly type or the absence of anomalies in that fixed-length window. 
+				<br><br>
+				At the core of the architecture lies a multi-layer transformer model. By leveraging multi-headed attention mechanisms, the transformer is designed to capture diverse patterns of multiple scales, such as global features like rhythm irregularities and localized features such as waveform anomalies. The attention mechanism is envisioned to enable the capturing of relationships between distant signal segments. Each token is further processed through feed-forward layers, which allows the learning of more complex nonlinearity. 
+				<br><br>
+				The feature vectors produced by the transformer are passed through a classification head, comprising fully connected layers that output predictions for each token. The model distinguishes between normal and abnormal segments and, when applicable, classifies the specific anomaly type. Finally, the model is trained using a loss function of choice to encourage the accurate detection of anomalies. The full schematic of the architecture is illustrated in Figure <a href="#figure1">1</a>
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="results">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+					<h1>4. Experiments and Results</h1>
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="4.1">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+					<h1>4.1 Validation of the Model's Performance on Synthetic Data</h1>
+					To validate the feasibility of the model, we began with a synthetic dataset featuring the simplest type of anomaly. Signals of 1,000 data points in length were generated from a background of random noise, with a random number of prominent peaks added to simulate anomalies. The objective was to train the model to distinguish between normal chunks of data and those containing these artificial peaks.
+					<br><br>
+					For training, we utilized the cross-entropy loss function paired with the Adam optimizer, with a learning rate of 0.001. The transformer architecture was implemented with an embedding size of 128, 4 heads per multi-head attention layer, and a total of 6 such layers, ensuring a lightweight yet effective configuration. The size of the training set is 200, and the size of the validation set is 20. 
+					<br><br>
+					The results from Figure <a href="#figure2">2</a> demonstrated basic performances of the proposed architecture. As shown in the loss and accuracy curves, the model converged rapidly within the first few epochs, achieving near-zero loss and an accuracy close to 99%. This indicates the model effectively learned the underlying patterns in the synthetic dataset. Anomaly detection performance was visualized by overlaying the predicted anomalies and ground truth on test signals. The model accurately identified the anomalous regions, with highlighted sections aligning closely with true annotations.
+					<br><br>
+					The classification metrics further validated the model’s performance when evaluated on a test set with 50 sequences, achieving a precision of 0.99 for both normal and abnormal signals. This indicates that 99% of predictions for both classes were correct. Recall values were 1.00 for normal signals and 0.96 for abnormal signals, meaning the model identified all normal instances while misclassifying only about 4% of abnormal instances as normal. The F1-scores—harmonic means of precision and recall—were 0.99 for normal and 0.98 for abnormal signals, showing good model performance in terms of balance and accuracy. 
+					<br><br>
+					While these results confirm the model’s capacity for detecting simple anomalies in synthetic data, the near-zero loss and near-perfect accuracy within the first epoch suggest that the dataset was overly simplistic for the architecture. To further test and thereby improve the model, we progressively increase the complexity of the synthetic data. 
+					<br><br>
+					<img src="./images/Figure2.png" width=1000px/ id="figure2">
+					<br><br>
+					Figure 2. (a) Example data sequence consisting of 1,000 data points generated from a noise background with a random number of peaks injected; the sequence is divided into chunks of 50 data points, each labeled as either normal or abnormal; abnormal regions are highlighted in green. (b) Precision, recall, and F1-score metrics for the model tested on a dataset comprising 50 sequences. (c) Loss and accuracy curves for 10 epochs of training. (d) An example from the test set, illustrating anomaly detection; the top plot shows the model's predicted anomalies (highlighted in red), while the bottom plot provides the ground truth anomalies (highlighted in green).			
+					<br><br>
+					<br><br>
+					We further evaluated the model's performance on synthetic data by making the anomalies more subtle, achieved by reducing the amplitude of the injected peaks. As the peak amplitude decreased, the anomalies became increasingly similar to normal signals, even to the human eye. This heightened the difficulty for the model, causing a slight increase in convergence time (more epochs) to achieve low loss and high accuracy. Nevertheless, for all peak amplitudes, the model successfully converged within 10 epochs. As illustrated in Figure <a href="#figure3">3</a>, accuracy declined slightly as the peak amplitude decreased, dropping from 100% at an amplitude of 5.0 to 97% at 0.65. At an amplitude of 0.65, the recall for the abnormal category was 0.92, indicating that 8% of abnormal segments were misclassified as normal. Similarly, the precision for the abnormal category was 0.93, meaning 7% of segments predicted as abnormal were actually normal. 
+					<br><br>
+					<img src="./images/Figure3.png" width=800px/ id="figure3">
+					Figure 3. Model Performance Across Varying Peak Amplitudes. Each row represents the model's training and validation performance (loss and accuracy curves) and an example of predicted anomalies versus ground truth for different peak amplitudes: (a) 5.0, (b) 2.0, (c) 0.65, and (d) 0.35.
+					<br><br>
+					<br><br>
+					These misclassifications can largely be attributed to the labeling methodology, which classifies any chunk overlapping within 1.5 standard deviations of a peak center (a parameter referred to as “peak width”) as abnormal. At lower peak amplitudes, the edges of the peak regions blended into the background noise, creating ambiguous cases that were nearly impossible to classify consistently. Figure <a href="#figure4">4</a> provides an example of such a scenario. Overall, the model exhibited robust performance even when dealing with subtle anomalies, demonstrating its ability to adapt to more complex and nuanced datasets. 
+					<br><br>
+					<img src="./images/Figure4.png" width=400px/ id="figure4">
+					Figure 4. An example of a misclassified region. The red box highlights a segment where the edges of the abnormal peak blend into the background noise, making accurate classification extremely challenging. This reflects a broader challenge in anomaly detection in scenarios where anomaly boundaries are ambiguous.
+					<br><br>
+					<br><br>
+					We further demonstrate the model's capability to effectively recognize various types of anomalies. Beyond detecting random peaks, we introduce random breaks into the data, which the model captures with high accuracy. Additionally, we extend the signal length to evaluate the model's performance on longer sequences, mimicking real-world scenarios such as long-term ECG monitoring in clinical settings. The results confirm that the model generalizes well to longer signals and accurately detects both anomaly types. Even under extreme class imbalance, where the training set contains significantly more normal samples than abnormal ones, the model maintains robust anomaly detection performance. The results of the above experiments can be found in Figure <a href="#figure5">5</a>. 
+					<br><br>
+					All these evaluations in this section establish the architecture as a reliable and adaptable starting point for developing improved models for self-supervised ECG time-series anomaly detection.
+
+					<img src="./images/Figure5.png" width=800px/ id="figure5">
+					Figure 5. Each panel illustrates the model's performance across different testing scenarios, showing loss and accuracy curves, classification metrics, and a sample prediction from the test set. (a) Model performance on detecting two types of anomalies: peaks and breaks. (b) Model evaluation with extended signal length (from 1,000 to 10,000 data points) and mixed anomalies. (c) Performance on long signals with significantly reduced anomaly incidence (fewer peaks and breaks).
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="4.2">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+				<h1>4.2 Testing the Model on Real ECG Data</h1>
+				After extensively validating the model on synthetic data, we proceeded to test its performance on real ECG signals with injected anomalies. For this evaluation, the MIT-BIH dataset was used as the base signal, with two types of anomalies—peaks and breaks—added, as previously described in Section 4.1. 
+				<br><br>
+				The injected anomalies hold clinical relevance as they can represent critical cardiac conditions. Peaks in ECG signals may indicate heightened cardiac electrical activity. This is associated with conditions such as hyperkalemia, where peaked T waves reflect elevated potassium levels in the blood, potentially causing fatal cardiac dysrhythmias <a href="#ref_32">[32]</a> <a href="#ref_33">[33]</a>. Peaks can also indicate left ventricular hypertrophy, characterized by high R-peak amplitudes due to thickened ventricular walls impairing blood pumping efficiency <a href="#ref_34">[34]</a>. Another condition linked to peaks is bundle branch blocks, where delays in electrical signal transmission can lead to other cardiac complications <a href="#ref_35">[35]</a>.
+				<br><br>
+				In contrast, breaks in the ECG signal indicate interruptions in electrical activity and are equally significant. Breaks can reflect asystole, a life-threatening condition where the heart's electrical activity ceases entirely, leading to cardiac arrest <a href="#ref_36">[36]</a>. They may also indicate bradycardia, where an abnormally slow heart rate results in prolonged intervals between beats, causing reduced blood flow and ischemic damage <a href="#ref_37">[37]</a>. Sinus arrest, another condition linked to breaks, involves a failure of the sinus node to generate impulses, causing pauses in cardiac rhythm with serious complications <a href="#ref_38">[38]</a>. Lastly, atrioventricular block, where signal transmission from the atria to the ventricles is impaired, can lead to dizziness, fainting, or even cardiac arrest <a href="#ref_39">[39]</a>.
+				<br><br>
+				By evaluating the model on real ECG data with injected anomalies indicative of clinically significant pathological events, we aim to assess its effectiveness in detecting critical cardiac conditions. The results are presented in Figure <a href="#figure6">6</a> . The learning curves show that the model required more than 10 epochs to achieve a stable loss and accuracy, reflecting the added complexity of using real ECG signals instead of random noise as the background. By around 20 epochs, the model converged, effectively learning to detect the injected anomalies. In terms of accuracy metrics (Figure <a href="#figure6">6</a>b), the model performed at a satisfactory level, achieving an overall accuracy of 98%. However, the recall for abnormal samples was slightly lower at 0.86, indicating that 14% of abnormal instances were misclassified as normal. This could be attributed to the increased challenge of distinguishing injected peaks from naturally occurring features in the ECG signals, as real ECG peaks sometimes resemble the injected ones. Visual inspection of the test set classification results further revealing cases at the transitioning zones of anomalies resembling those described in Figure <a href="#figure4">4</a>, where distinguishing between normal and abnormal segments was nearly impossible. Nonetheless, the model demonstrated strong performance in detecting the two types of anomalies, with metrics indicating effectiveness.
+				<br><br>
+				To further understand how the model detects anomalies, we analyzed the attention weights across its 24 heads (4 heads per layer across 6 layers). The attention weight heatmaps for specific sequences were obtained after the query-key multiplication and SoftMax operation, but before multiplying by the value matrix. For a sequence of length T, the attention heatmap is of size 𝑇 × 𝑇. Each row corresponds to the attention given by a query token to all other tokens, while each column corresponds to the attention received by a key token from all queries. Brighter grid colors indicate higher attention values, meaning the query token is focusing more on the corresponding key token.
+				<br><br>
+				The attention maps in Figure <a href="#figure6">6</a>d correspond to the sequence shown in Figure <a href="#figure6">6</a>a. Starting from layer 1, heads 1, 2, and 3 show that queries are beginning to attend to the keys of tokens corresponding to the locations of the two peaks. In layer 2, head 4 also begins to highlight these regions, with two bright dotted lines marking the peaks. By layers 3 and 4, the attention becomes more pronounced, with layer 3 head 4 faintly highlighting a band near the end of the sequence corresponding to the break. Interestingly, layer 4 head 3 displays numerous vertical dotted lines, indicating that queries are attending to all peaks, including both the abnormal peaks and the normal ECG peaks. This pattern persists in layer 5, heads 1 and 3.
+				By the final layer, however, the model’s attention becomes more refined. The four heads in layer 6 focus almost exclusively on the two abnormal peaks and one break, with minimal attention given to the normal ECG peaks. While faint traces of attention to normal peaks remain in heads 2 and 4, the abnormal regions dominate the attention maps. Layer 6 head 3 displays the clearest and most focused attention on the anomalies, capturing both the peaks and the break with high precision.			
+				This progression across layers highlights the hierarchical nature of the transformer architecture. The first layers capture initial patterns and respond to multiple features, while deeper layers refine the focus, isolating the truly anomalous patterns. This ability to progressively differentiate signal features further shows the model’s capacity for anomaly detection and demonstrates its interpretability, which is critical for clinical applications, where understanding how a model arrives at its decisions is essential for trust and reliability.
+				<img src="./images/Figure6.png" width=800px/ id="figure6">
+				<br>
+				Figure 6. Model Performance on Real ECG Data with Injected Anomalies. (a) Example of predicted anomalies (top) versus ground truth anomalies (bottom) from the test set. (b) Accuracy metrics. (c) Loss and accuracy curves over 20 training epochs. (d) Attention weight heatmaps for all 24 attention heads (4 heads per layer across 6 layers).
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="4.3">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+				<h1>4.3 Testing Model's Performance on Anomalies that Alter ECG Spectral Features</h1>
+				Now that we have demonstrated the model’s performance on both synthetic data and real-world ECG data, we can explore a new dimension of anomalies. Previously, we focused on injected anomalies such as peaks and breaks—modifications that primarily affect the temporal characteristics of the time-series signal. However, what happens if we inject anomalies that alter the spectral features of the signal, such as increasing or decreasing the frequency components? Would this pose a greater challenge for the model?
+				<br><br>
+				In this experiment, we introduced frequency-based anomalies into the ECG signal to evaluate the model’s ability to adapt. While the model required more time to fully converge—taking 30 epochs compared to fewer epochs for temporal anomalies—and exhibited less smooth learning curves during training, it ultimately achieved remarkable performance, reaching 99% accuracy after 30 epochs, with accuracy metrics demonstrating a good balance between the anomaly and normal classes.
+				<br><br>
+				The ability to predict anomalies based on spectral features is particularly significant for clinical applications. Spectral features are strongly associated with various cardiac anomalies. For instance, 1) ventricular tachycardia (VT) is characterized by rapid electrical activity in the ventricles, which manifests as increased high-frequency components in the ECG spectrum; 2) Bradycardia is a condition where the heart beats abnormally slow, often associated with dominant low-frequency components; 3) atrial fibrillation (AF) is recognized by irregular rhythms and the presence of chaotic high-frequency atrial activity in the spectrum <a href="#ref_40">[40]</a> <a href="#ref_41">[41]</a>. By showing ability to effectively detect spectral anomalies, our model further showcases its robustness and potential for real-world applications in aiding clinicians in wide-ranging scenarios. 
+				<br><br>
+				<img src="./images/Figure7.png" width=800px/ id="figure7">
+				<br>
+				Figure 7. Performance of the model in detecting spectral anomalies in ECG signals. (a) Learning curves show the model's convergence over 30 epochs. (b) The classification metrics. (c) An example prediction from the test set where the anomaly corresponds to a lowered frequency pattern, mimicking Bradycardia (highlighted in red for predicted anomalies and green for true anomalies). (d) An example prediction from the test set showing an anomaly with increased frequency, representing Tachycardia (highlighted similarly). 			</div>
+		</div>
+
+		<div class="content-margin-container" id="4.4">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+				<h1>4.4 Testing Different Training Parameters on Model Performance</h1>
+				Following advice from Prof. Philip Isola, we aim to build a theoretical foundation for why the model performs well in predicting diverse types of anomalies—both temporal and spectral—on real-world ECG data. In this section, we experiment with different model components and training parameters to better understand the building blocks underlying the model's robustness. For these experiments, we use the model and injected temporal anomalies (peaks and breaks) described in Section 4.2. The lightweight nature of our transformer-based architecture allows us to efficiently test multiple configurations within a reasonable timeframe.			
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="4.4.1">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+				<h1>4.4.1 Learning Rate Analysis</h1>
+				We first investigate the effects of the learning rate, a hyperparameter that controls the magnitude of weight updates during optimization. It plays a critical role in determining training efficiency and the model's ability to converge. To assess its impact, we tested five learning rates: lr=0.00001, 0.0001, 0.001, 0.01, and 0.1, evaluating their influence on stability, convergence, and anomaly detection performance.
+				<br><br>
+				At smaller learning rates (lr=0.00001, 0.0001, and 0.001), the model exhibited stable and consistent training behavior. With lr=0.00001, the training and validation losses decreased steadily, but convergence was slow, with losses continuing to decrease even after 20 epochs. In contrast, lr=0.0001 and 0.001 achieved faster convergence while maintaining stability. Of these, lr=0.0001 was slightly more stable, making both values highly suitable for robust anomaly detection.
+				<br><br>
+				With a moderate learning rate (lr=0.01), the model experienced significant instability, with validation accuracy oscillating erratically between 0.9 and 0.1. This behavior indicates overshooting, where large weight updates prevent the model from settling into optimal minima of the loss landscape. Further analysis revealed a tendency to classify all samples as either "normal" or "abnormal," reflecting a failure to capture nuanced patterns. At lr=0.1, the model showed slightly less erratic behavior, but its performance remained poor, frequently predicting all samples as normal. While the loss curve was marginally more stable, the aggressive updates hindered the model's ability to detect anomalies effectively.
+				<br><br>
+				These results emphasize the importance of selecting an appropriate learning rate for stable and efficient training. Extremely small learning rates, such as lr=0.00001, ensure stability but slow down convergence, while excessively high learning rates (lr=0.01 and 0.1) cause instability and prevent meaningful learning. The learning rates lr=0.0001 and 0.001 emerged as optimal choices, balancing stability and efficiency. This analysis underscores the model's sensitivity to learning rate selection, a critical factor for achieving reliable anomaly detection in ECG signals.
+				<img src="./images/Figure8.png" width=800px/ id="figure8">
+				<br>
+				Figure 8. Effects of Learning Rates on Model Performance, illustrating the learning curves (left) and classification reports (right) for the model trained with different learning rates: (a) lr = 0.00001; (b) lr = 0.0001; (c) lr = 0.001; (d) lr = 0.01; (e) lr = 0.1.			
+			
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="4.4.2">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+				<h1>4.4.2 Optimizer Analysis</h1>
+				Next, we investigate the impact of different optimizers on model performance. Optimizers are essential algorithms in the training process that adjust the model's weight parameters to minimize the loss function. Their choice significantly influences the model's convergence behavior and overall performance. Commonly used optimizers include Stochastic Gradient Descent (SGD), Adam, RMSprop, and AdaGrad. For this study, we focus on six configurations: SGD <a href="#ref_42">[42]</a>, SGD with Momentum <a href="#ref_43">[43]</a> <a href="#ref_44">[44]</a>, SGD with Nesterov Momentum <a href="#ref_45">[45]</a>, RMSprop <a href="#ref_46">[46]</a>, AdaGrad <a href="#ref_47">[47]</a>, and Adam <a href="#ref_48">[48]</a> <a href="#ref_49">[49]</a> <a href="#ref_50">[50]</a>. Based on the results from the previous section, we set the learning rate to 0.0001, as it demonstrated effective yet conservative behavior, delivering one of the best performances among the tested learning rates. The experimental results for these optimizers are presented in Figures <a href="#figure9">9</a> and <a href="#figure10">10</a>.
+				<br><br>
+				Vanilla SGD, the simplest optimizer, updates the weights by computing the gradient of the loss for a batch of data points and stepping in the opposite direction. However, it performed the worst among all optimizers during the first 20 epochs, exhibiting slow convergence and comparatively poorer accuracy. By 80 epochs, the gap between SGD and the other methods further widened, indicating its inherent limitations. The underperformance of SGD can be attributed to its sensitivity to noisy gradients and its inability to efficiently navigate flat regions of the loss landscape. The lack of momentum in vanilla SGD prevents it from accumulating directional information, which would otherwise accelerate convergence and stabilize training.
+				<br><br>
+				SGD with Momentum significantly improved upon vanilla SGD by incorporating a velocity term, which accumulates past gradients to build momentum. This enhancement allowed the optimizer to better navigate flat regions and small local minima. While it initially lagged behind adaptive optimizers like Adam and RMSprop, by 80 epochs, it managed to close much of the performance gap. The addition of momentum reduced oscillations and enabled steady progress in reducing training loss. However, it still required more epochs to achieve performance comparable to adaptive methods. Building on this, SGD with Nesterov Momentum introduced further refinements by computing the gradient at the anticipated future position rather than the current position. This adjustment enabled more precise updates, reducing overshooting and improving stability. Throughout training, its performance closely mirrored that of SGD with Momentum but consistently surpassed vanilla SGD. By 80 epochs, Nesterov Momentum approached the performance of Adam and RMSprop, further validating its enhanced design.
+				<br><br>
+				Among the adaptive optimizers, RMSprop excelled in the early training epochs, outperforming all other methods within the first 10 epochs. RMSprop scales the learning rate inversely with the recent magnitude of gradients, ensuring stable updates even in the presence of noisy gradients. This property made it particularly effective for navigating non-convex loss landscapes. However, RMSprop exhibited occasional fluctuations in both loss and accuracy curves later in training, suggesting some instability. These fluctuations warrant further investigation to understand their underlying causes. AdaGrad, another adaptive optimizer, adjusts the learning rate based on the cumulative sum of squared gradients. This approach allows parameters with smaller gradients to receive larger updates while reducing the update size for parameters with larger gradients. AdaGrad consistently trailed RMSprop by a slight margin, but unlike RMSprop, it showed no significant fluctuations, underscoring its superior stability. However, its performance plateaued over longer training periods due to its diminishing learning rate, limiting its long-term efficacy.
+				<br><br>
+				Among all the optimizers, Adam emerged as the most effective overall. By combining the benefits of momentum and adaptive learning rates, Adam delivered consistent performance across the training process, whether for 20 or 80 epochs. Its ability to handle noisy gradients, adapt learning rates dynamically, and incorporate momentum contributed to its robust and steady convergence. By 80 epochs, Adam achieved the highest accuracy and the lowest loss among all methods, cementing its status as the state-of-the-art optimizer in deep learning.
+				<br><br>
+				Overall, these results highlight the significant differences in convergence speed and stability across the six optimizers. Adaptive methods like Adam, RMSprop, and AdaGrad demonstrated consistently superior performance in the early epochs, enabling faster convergence and greater accuracy. On the other hand, SGD with Momentum and SGD with Nesterov Momentum required more training time to approach comparable performance, reflecting their slower but steady optimization paths. Vanilla SGD, meanwhile, consistently underperformed, emphasizing its limitations in modern deep learning tasks. These experimental findings highlight the importance of choosing the right optimizer based on task complexity, projected training duration, and desired stability.
+				<br><br>
+				<img src="./images/Figure9.png" width=900px/ id="figure9">
+				<br>
+				Figure 9. Model Performance Comparison Across Six Optimizers (Training for 20 Epochs). (a) Loss curves. (b) Accuracy curves. (c) Classification report summarizing precision, recall, and F1-score for each optimizer on the test set.			
+				<br><br>
+				<img src="./images/Figure10.png" width=900px/ id="figure10">
+				<br>
+				Figure 10. Model Performance Comparison Across Six Optimizers (Training for 80 Epochs). (a) Loss curves. (b) Accuracy curves. (c) Classification report summarizing precision, recall, and F1-score for each optimizer on the test set.
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="4.4.3">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+				<h1>4.4.3 Batch Size Analysis</h1>
+				Batch size is a crucial hyperparameter that directly influences the model's training dynamics and performance by determining the number of data points processed in one forward and backward pass. Smaller batch sizes allow for more frequent weight updates and greater stochasticity in data sampling, which can help the model escape local minima. In contrast, larger batch sizes provide more stable gradient estimates but update weights less often. In Figure <a href="#figure11">11</a>, we present the effects of batch size on model training, testing six sizes: 8, 16, 32, 64, 128, and 256.
+				<br><br>
+				The results show a clear trend: model performance, in terms of accuracy and convergence, decreases as batch size increases. Smaller batch sizes (e.g., 8, 16, and 32) achieved better accuracy and faster loss reduction, likely due to frequent updates and stochastic variations in sampled batches, which helped the model explore the loss landscape more effectively. In contrast, larger batch sizes (e.g., 128 and 256) struggled to match this performance, as the reduced update frequency and diminished stochasticity limited the model's ability to escape local minima and capture subtle patterns in the data.
+				<br><br>
+				The largest batch size, 256, is especially noteworthy as it processes all 200 training sequences in a single pass, operating similarly to full-batch gradient descent. While this approach benefits from reduced gradient noise, it lacks the randomness that facilitates effective optimization in high-dimensional loss landscapes. Visual inspection of test results for this batch size revealed that the model captured only one type of anomaly (either peaks or breaks), suggesting it may have become stuck in local minima.
+				<br><br>
+				The lightweight architecture of our model and the relatively small size of the dataset meant that training time was largely unaffected by batch size. Even for the smallest batch sizes, computational overhead remained minimal. However, in larger-scale scenarios with more complex models and extensive datasets, we would likely need to consider more on the tradeoff between computational efficiency and model performance.
+				<br><br>
+				<img src="./images/Figure11.png" width=900px/ id="figure11">
+				<br>
+				Figure 11. Model Performance Comparison Across Different Batch Sizes (Training for 20 Epochs). (a) Loss curves. (b) Accuracy curves. (c) Classification report summarizing precision, recall, and F1-score.
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="discussion">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+				<h1>5. Discussions</h1>
+				In this study, we have developed a lightweight, robust transformer-based model that leverages a self-supervised learning framework to detect anomalies in ECG data. Our work is motivated by the observation that much of the current research on ECG anomaly detection uses anomalies that poorly represent real-world pathologies. To address this gap, we designed an anomaly injection scheme that mimics clinically relevant anomalies, ensuring that the injected anomalies reflect major pathologies observed in practice. The results demonstrate the model's ability to detect both temporal anomalies (e.g., peaks and breaks) and spectral anomalies (e.g., altered frequencies), even when these anomalies are subtle and difficult for the human eye to identify.
+				<br><br>
+				A key strength of our model is its interpretability. Through the visualization of attention heatmap weights, we provide insights into how the model focuses on specific regions of the signal to detect abnormalities. This interpretability enhances its potential utility in clinical decision-making. Furthermore, we systematically examined the reasons behind the model's strong performance by probing its behavior under varying learning rates, optimizers, and batch sizes, offering a deeper understanding of how these hyperparameters influence training dynamics and model performance.
+				<br><br>
+				However, several limitations warrant further exploration. First, we have not yet studied the effects of varying architectural parameters, such as the number of attention heads, the number of transformer layers, and the embedding dimensions. These parameters likely influence the model’s ability to capture and process patterns in ECG data. Another unexplored area is the role of positional encoding; incorporating positional information might improve the model’s performance by capturing temporal dependencies in ECG signals more effectively. Additionally, expanding the anomaly injection framework to include a broader range of pathologies would improve the model's robustness. We also aim to explore transfer learning to leverage pre-trained models for specific anomalies and identify ways to increase generalizability to unseen anomalies.
+				<br><br>
+				Ultimately, by developing a model that is robust, interpretable, and aligned with clinical needs, we aim to provide tools that can aid physicians in patient diagnostics and monitoring in cardiac health, ultimately improving patient outcomes.
+			</div>
+		</div>
+
+		<div class="content-margin-container" id="code_availability">
+				<div class="margin-left-block">
+				</div>
+			<div class="main-content-block">
+				<h1>Code Availability</h1>
+				All code used in this study is available on GitHub at the following link: <a href="https://github.com/james-bole-pan/ssl_ecg_tsad"> https://github.com/james-bole-pan/ssl_ecg_tsad</a>.
+				</div>
+		</div>
+
+		<div class="content-margin-container" id="citations">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+				<div class='citation' id="references" style="height:auto"><br>
+					<span style="font-size:16px">References:</span><br><br>
+					
+					<a id="ref_1"></a>[1] <a href="https://doi.org/10.1007/978-3-030-73100-7_60">Shaukat, K., Alam, T. M., Luo, S., Shabbir, S., Hameed, I. A., Li, J., Abbas, S. K., & Javed, U. (2021). A review of time-series Anomaly detection techniques: A step to future perspectives. Advances in Intelligent Systems and Computing, 865–877.</a><br><br>
+				
+					<a id="ref_2"></a>[2] <a href="https://doi.org/10.1145/3691338">Zamanzadeh Darban, Z., Webb, G. I., Pan, S., Aggarwal, C., & Salehi, M. (2024). Deep learning for TIME SERIES ANOMALY DETECTION: A survey. ACM Computing Surveys, 57(1), 1–42.</a><br><br>
+				
+					<a id="ref_3"></a>[3] <a href="https://doi.org/10.1016/j.neunet.2024.106106">Hojjati, H., Ho, T. K., & Armanfard, N. (2024). Self-supervised anomaly detection in Computer Vision and beyond: A survey and outlook. Neural Networks, 172, 106106.</a><br><br>
+				
+					<a id="ref_4"></a>[4] <a href="https://doi.org/10.1038/s41551-022-00914-1">Krishnan, R., Rajpurkar, P., & Topol, E. J. (2022). Self-supervised learning in medicine and Healthcare. Nature Biomedical Engineering, 6(12), 1346–1352.</a><br><br>
+				
+					<a id="ref_5"></a>[5] <a href="https://www.who.int/news-room/fact-sheets/detail/the-top-10-causes-of-death">World Health Organization. (2024). The top 10 causes of death. World Health Organization.</a><br><br>
+					
+					<a id="ref_6"></a>[6] <a href="https://www.statpearls.com/">Sattar, Y., & Chhabra, L. (2024). Electrocardiogram. StatPearls Publishing.</a><br><br>
+				
+					<a id="ref_7"></a>[7] <a href="https://arxiv.org/">Jiang, A., Huang, C., Cao, Q., Xu, Y., Zeng, Z., Chen, K., Zhang, Y., & Wang, Y. (2024). Anomaly Detection in Electrocardiograms: Advancing Clinical Diagnosis Through Self-Supervised Learning. Arxiv.</a><br><br>
+					
+					<a id="ref_8"></a>[8] <a href="https://doi.org/10.1109/nfv-sdn.2016.7919492">Kourtis, M.-A., Xilouris, G., Gardikis, G., & Koutras, I. (2016). Statistical-based anomaly detection for NFV services. 2016 IEEE Conference on Network Function Virtualization and Software Defined Networks (NFV-SDN), 161–166.</a><br><br>
+    
+					<a id="ref_9"></a>[9] <a href="https://doi.org/10.1109/phm.2017.8079166">Luo, H., & Zhong, S. (2017). Gas turbine engine gas path anomaly detection using Deep Learning with Gaussian distribution. 2017 Prognostics and System Health Management Conference (PHM-Harbin), 1–6.</a><br><br>
+					
+					<a id="ref_10"></a>[10] <a href="https://doi.org/10.1016/j.jnca.2015.11.016">Ahmed, M., Naser Mahmood, A., & Hu, J. (2016). A survey of Network Anomaly Detection Techniques. Journal of Network and Computer Applications, 60, 19–31.</a><br><br>
+					
+					<a id="ref_11"></a>[11] <a href="https://doi.org/10.1109/tpami.2020.2970410">Kurt, M. N., Yilmaz, Y., & Wang, X. (2021). Real-time nonparametric anomaly detection in high-dimensional settings. IEEE Transactions on Pattern Analysis and Machine Intelligence, 43(7), 2463–2479.</a><br><br>
+					
+					<a id="ref_12"></a>[12] <a href="https://doi.org/10.1109/tvlsi.2020.2984472">Shylendra, A., Shukla, P., Mukhopadhyay, S., Bhunia, S., & Trivedi, A. R. (2020a). Low power unsupervised anomaly detection by nonparametric modeling of Sensor Statistics. IEEE Transactions on Very Large Scale Integration (VLSI) Systems, 28(8), 1833–1843.</a><br><br>
+					
+					<a id="ref_13"></a>[13] <a href="https://www.diva-portal.org/smash/record.jsf?pid=diva2%3A1149130&dswid=-1109">Singh, A. (2017). Anomaly detection for temporal data using long short-term memory (LSTM).</a><br><br>
+					
+					<a id="ref_14"></a>[14] <a href="https://doi.org/10.1145/3219819.3219845">Hundman, K., Constantinou, V., Laporte, C., Colwell, I., & Soderstrom, T. (2018). Detecting spacecraft anomalies using LSTMs and Nonparametric dynamic Thresholding. Proceedings of the 24th ACM SIGKDD International Conference on Knowledge Discovery &amp; Data Mining, 387–395.</a><br><br>
+					
+					<a id="ref_15"></a>[15] <a href="https://doi.org/10.1016/j.patcog.2022.109084">Yao, Y., Ma, J., & Ye, Y. (2023). Regularizing autoencoders with wavelet transform for sequence anomaly detection. Pattern Recognition, 134, 109084.</a><br><br>
+					
+					<a id="ref_16"></a>[16] <a href="https://doi.org/10.1007/978-3-319-26211-6_17">Kacprzyk, J., Owsiński, J. W., Viattchenin, D. A., & Shyrai, S. (2015). A new heuristic algorithm of possibilistic clustering based on intuitionistic fuzzy relations. Advances in Intelligent Systems and Computing, 199–214.</a><br><br>
+				
+					<a id="ref_17"></a>[17] <a href="https://doi.org/10.1109/tpami.2024.3387317">Zhang, K., Wen, Q., Zhang, C., Cai, R., Jin, M., Liu, Y., Zhang, J. Y., Liang, Y., Pang, G., Song, D., & Pan, S. (2024). Self-supervised learning for time series analysis: Taxonomy, progress, and prospects. IEEE Transactions on Pattern Analysis and Machine Intelligence, 46(10), 6775–6794.</a><br><br>
+    
+					<a id="ref_18"></a>[18] <a href="https://doi.org/10.1109/tpami.2024.3415112">Gui, J., Chen, T., Zhang, J., Cao, Q., Sun, Z., Luo, H., & Tao, D. (2024). A survey on self-supervised learning: Algorithms, applications, and future trends. IEEE Transactions on Pattern Analysis and Machine Intelligence, 46(12), 9052–9071.</a><br><br>
+					
+					<a id="ref_19"></a>[19] <a href="https://doi.org/10.3390/electronics11142146">Tran, D. H., Nguyen, V. L., Nguyen, H., & Jang, Y. M. (2022). Self-supervised learning for time-series anomaly detection in industrial internet of things. Electronics, 11(14), 2146.</a><br><br>
+					
+					<a id="ref_20"></a>[20] <a href="https://arxiv.org/abs/2305.04468">Jeong, Y., Yang, E., Ryu, J. H., Park, I., & Kang, M. (2023). Anomalybert: Self-supervised transformer for time series anomaly detection using data degradation scheme. arXiv preprint arXiv:2305.04468.</a><br><br>
+					
+					<a id="ref_21"></a>[21] <a href="https://doi.org/10.1109/tnse.2022.3148276">Jiao, Y., Yang, K., Song, D., & Tao, D. (2022). Timeautoad: Autonomous anomaly detection with self-supervised contrastive loss for multivariate time series. IEEE Transactions on Network Science and Engineering, 9(3), 1604–1619.</a><br><br>
+					
+					<a id="ref_22"></a>[22] <a href="https://doi.org/10.1016/j.patcog.2024.110874">Darban, Z. Z., Webb, G. I., Pan, S., Aggarwal, C. C., & Salehi, M. (2025). Carla: Self-supervised contrastive representation learning for time series Anomaly detection. Pattern Recognition, 157, 110874.</a><br><br>
+					
+					<a id="ref_23"></a>[23] <a href="https://doi.org/10.1109/icde60146.2024.00080">Sun, Y., Pang, G., Ye, G., Chen, T., Hu, X., & Yin, H. (2024a). Unraveling the ‘anomaly’ in time series Anomaly detection: A self-supervised tri-domain solution. 2024 IEEE 40th International Conference on Data Engineering (ICDE).</a><br><br>
+					
+					<a id="ref_24"></a>[24] <a href="https://openreview.net/forum?id=HmoNeNCmOj">Deforce, B., Lee, M. C., Baesens, B., Asensio, E. S., Yoo, J., & Akoglu, L. (2024, October). TSA on AutoPilot: Self-tuning Self-supervised Time Series Anomaly Detection. In NeurIPS 2024 Workshop: Self-Supervised Learning-Theory and Practice.</a><br><br>				
+				
+					<a id="ref_25"></a>[25] <a href="https://doi.org/10.1016/j.compbiomed.2019.04.009">Chauhan, S., Vig, L., & Ahmad, S. (2019). ECG anomaly class identification using LSTM and error profile modeling. Computers in Biology and Medicine, 109, 14–21.</a><br><br>
+
+					<a id="ref_26"></a>[26] <a href="https://doi.org/10.1007/978-3-031-54049-3_7">Hribar, R., & Torkar, D. (2024). Explainable anomaly detection of 12-lead ECG signals using denoising autoencoder. Studies in Computational Intelligence, 127–140.</a><br><br>
+
+					<a id="ref_27"></a>[27] <a href="https://arxiv.org/abs/2408.17154">Jiang, A., Huang, C., Cao, Q., Xu, Y., Zeng, Z., Chen, K., ... & Wang, Y. (2024). Self-supervised Anomaly Detection Pretraining Enhances Long-tail ECG Diagnosis. arXiv preprint arXiv:2408.17154.</a><br><br>
+
+					<a id="ref_28"></a>[28] <a href="https://doi.org/10.1038/s41467-021-24483-0">Kiyasseh, D., Zhu, T., & Clifton, D. (2021). A clinical deep learning framework for continually learning from cardiac signals across diseases, time, modalities, and Institutions. Nature Communications, 12(1).</a><br><br>
+
+					<a id="ref_29"></a>[29] <a href="https://arxiv.org/abs/2404.15333">Park, J., Kim, D. Y., Kim, Y., Yoo, J., & Kim, T. J. (2024). EB-GAME: A Game-Changer in ECG Heartbeat Anomaly Detection. arXiv preprint arXiv:2404.15333.</a><br><br>
+				
+				    <a id="ref_30"></a>[30] <a href="https://doi.org/10.1109/51.932724">Moody, G. B., & Mark, R. G. (2001). The impact of the MIT-BiH Arrhythmia Database. IEEE Engineering in Medicine and Biology Magazine, 20(3), 45–50.</a><br><br>
+					
+					<a id="ref_31"></a>[31] <a href="https://doi.org/10.1161/01.cir.101.23.e215">Goldberger, A. L., Amaral, L. A., Glass, L., Hausdorff, J. M., Ivanov, P. Ch., Mark, R. G., Mietus, J. E., Moody, G. B., Peng, C.-K., & Stanley, H. E. (2000a). Physiobank, PhysioToolkit, and PhysioNet. Circulation, 101(23).</a><br><br>
+					
+					<a id="ref_32"></a>[32] <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9301030/">Teymouri, N., Mesbah, S., Navabian, S. M. H., Shekouh, D., Najafabadi, M. M., Norouzkhani, N., ... & Deravi, N. (2022). ECG frequency changes in potassium disorders: a narrative review. American Journal of Cardiovascular Disease, 12(3), 112.</a><br><br>
+					
+					<a id="ref_33"></a>[33] <a href="https://doi.org/10.1093/ndt/gfz206">Hunter, R. W., & Bailey, M. A. (2019). Hyperkalemia: Pathophysiology, risk factors and consequences. Nephrology Dialysis Transplantation, 34(Supplement_3), iii2–iii11.</a><br><br>
+					
+					<a id="ref_34"></a>[34] <a href="https://doi.org/10.1038/s41598-023-28325-5">Liu, C.-W., Wu, F.-H., Hu, Y.-L., Pan, R.-H., Lin, C.-H., Chen, Y.-F., Tseng, G.-S., Chan, Y.-K., & Wang, C.-L. (2023). Left ventricular hypertrophy detection using electrocardiographic signal. Scientific Reports, 13(1).</a><br><br>
+					
+					<a id="ref_35"></a>[35] <a href="https://doi.org/10.1007/978-3-662-10315-9_11">Gertsch, M. (2004). Bundle-branch blocks (complete and incomplete). The ECG, 117–130.</a><br><br>
+					
+					<a id="ref_36"></a>[36] <a href="https://doi.org/10.1161/circulationaha.119.041051">Prasada, S., Nishtala, A., & Goldschlager, N. (2019). Prolonged ventricular asystole. Circulation, 139(24), 2798–2801.</a><br><br>
+					
+					<a id="ref_37"></a>[37] <a href="https://doi.org/10.1016/j.tcm.2019.07.001">Sidhu, S., & Marine, J. E. (2020). Evaluating and managing bradycardia. Trends in Cardiovascular Medicine, 30(5), 265–272.</a><br><br>
+					
+					<a id="ref_38"></a>[38] <a href="https://doi.org/10.1016/b978-032301281-2.50010-2">Kanter, R. J., Carboni, M. P., & Silka, M. J. (2006). Pediatric arrhythmias. Critical Heart Disease in Infants and Children, 207–241.</a><br><br>
+					
+					<a id="ref_39"></a>[39] <a href="https://doi.org/10.7812/tpp/11-053">Levis, J. T. (2011). ECG diagnosis: Complete heart block. The Permanente Journal, 15(2), 90–90.</a><br><br>				
+					
+					<a id="ref_40"></a>[40] <a href="https://www.jacc.org/doi/abs/10.1016/j.jacc.2020.02.025">Chung, M. K., Refaat, M., Shen, W. K., Kutyifa, V., Cha, Y. M., Di Biase, L., ... & Lakkireddy, D. R. (2020). Atrial fibrillation: JACC council perspectives. Journal of the American College of Cardiology, 75(14), 1689-1713.</a><br><br>
+					
+					<a id="ref_41"></a>[41] <a href="https://www.sciencedirect.com/science/article/pii/S1470211824045494">Whitaker, J., Wright, M. J., & Tedrow, U. (2023). Diagnosis and management of ventricular tachycardia. Clinical Medicine, 23(5), 442-448.</a><br><br>
+					
+					<a id="ref_42"></a>[42] <a href="https://doi.org/10.1214/aoms/1177729586">Robbins, H., & Monro, S. (1951). A stochastic approximation method. The Annals of Mathematical Statistics, 22(3), 400–407.</a><br><br>
+					
+					<a id="ref_43"></a>[43] <a href="https://doi.org/10.1016/0041-5553(64)90137-5">Polyak, B. T. (1964). Some methods of speeding up the convergence of iteration methods. USSR Computational Mathematics and Mathematical Physics, 4(5), 1–17.</a><br><br>
+					
+					<a id="ref_44"></a>[44] <a href="https://doi.org/10.1038/323533a0">Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). Learning representations by back-propagating errors. Nature, 323(6088), 533–536.</a><br><br>
+					
+					<a id="ref_45"></a>[45] <a href="https://cir.nii.ac.jp/crid/1370576118744597902">Nesterov, Y. (1983). A method for unconstrained convex minimization problem with the rate of convergence O (1/k2). In Dokl. Akad. Nauk. SSSR (Vol. 269, No. 3, p. 543).</a><br><br>
+					
+					<a id="ref_46"></a>[46] <a href="https://cir.nii.ac.jp/crid/1370017282431050757">Tieleman, T. (2012). Lecture 6.5‐rmsprop: Divide the gradient by a running average of its recent magnitude. COURSERA: Neural networks for machine learning, 4(2), 26.</a><br><br>
+					
+					<a id="ref_47"></a>[47] <a href="https://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">Duchi, J., Hazan, E., & Singer, Y. (2011). Adaptive subgradient methods for online learning and stochastic optimization. Journal of machine learning research, 12(7).</a><br><br>
+					
+					<a id="ref_48"></a>[48] <a href="https://arxiv.org/abs/1412.6980">Kingma, D. P. (2014). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.</a><br><br>
+					
+					<a id="ref_49"></a>[49] <a href="https://www.youtube.com/watch?v=NE88eqLngkg">DeepBean. (2023, March 2). Optimization for Deep Learning (Momentum, RMSprop, AdaGrad, Adam). YouTube.</a><br><br>
+					
+					<a id="ref_50"></a>[50] <a href="https://www.youtube.com/watch?v=mdKjMPmcWjY">CodeEmporium. (2020, February 10). Optimizers - EXPLAINED!. YouTube.</a><br><br>
+					</div>				
+		    </div>
+		    <div class="margin-right-block">
+            <!-- margin notes for reference block here -->
+		    </div>
+		</div>
+
+	</body>
+
+</html>
